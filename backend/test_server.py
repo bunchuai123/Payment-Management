@@ -4,7 +4,7 @@ from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 from typing import Optional, List
-from jose import jwt
+import jwt
 from datetime import datetime, timedelta
 import hashlib
 import uuid
@@ -22,10 +22,14 @@ except ImportError as e:
 # Simple FastAPI app for testing
 app = FastAPI(title="Payment Management Test API")
 
-# CORS middleware with very permissive settings for testing
+# CORS middleware configured for production
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Allow all origins for testing
+    allow_origins=[
+        "http://localhost:3000",  # For local development
+        "https://payment-management-hbbag7fn6-bunchuai123s-projects.vercel.app",  # Production frontend
+        "*"  # Temporary for testing
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -53,6 +57,13 @@ users_db = {
         "hashed_password": hashlib.sha256("manager123".encode()).hexdigest(),
         "full_name": "Test Manager",
         "role": "manager"
+    },
+    "admin@paymentpro.com": {
+        "id": "user_3",
+        "email": "admin@paymentpro.com", 
+        "hashed_password": hashlib.sha256("admin123".encode()).hexdigest(),
+        "full_name": "System Administrator",
+        "role": "admin"
     }
 }
 
@@ -164,7 +175,7 @@ def verify_token(token: str):
         if email is None:
             return None
         return email
-    except jwt.PyJWTError:
+    except jwt.InvalidTokenError:
         return None
 
 async def get_current_user(token: str = Depends(oauth2_scheme)):
