@@ -3,9 +3,3 @@ builder = "nixpacks"
 
 [deploy]
 healthcheckPath = "/health"
-healthcheckTimeout = 300
-restartPolicyType = "on-failure"
-
-[env]
-PORT = "8001"
-PYTHON_VERSION = "3.10"
