@@ -241,6 +241,30 @@ async def get_current_user_profile(current_user: dict = Depends(get_current_user
         role=current_user["role"]
     )
 
+@app.post("/api/auth/create-admin")
+async def create_admin_user(admin_secret: str = Form(...)):
+    """Create admin user with secret key (one-time setup)"""
+    # Simple secret key check - change this to something secure
+    if admin_secret != "create-admin-paymentpro-2025":
+        raise HTTPException(status_code=403, detail="Invalid admin creation secret")
+    
+    # Check if admin already exists
+    if "admin@paymentpro.com" in users_db:
+        raise HTTPException(status_code=400, detail="Admin user already exists")
+    
+    # Create admin user
+    admin_user = {
+        "id": "user_3",
+        "email": "admin@paymentpro.com",
+        "hashed_password": hashlib.sha256("admin123".encode()).hexdigest(),
+        "full_name": "System Administrator",
+        "role": "admin"
+    }
+    
+    users_db["admin@paymentpro.com"] = admin_user
+    
+    return {"message": "Admin user created successfully", "email": "admin@paymentpro.com"}
+
 # Request Management Endpoints
 
 @app.post("/api/requests", response_model=dict)

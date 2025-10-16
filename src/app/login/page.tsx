@@ -135,6 +135,18 @@ export default function LoginPage() {
             <Button 
               type="button"
               onClick={() => {
+                setEmail('admin@paymentpro.com')
+                setPassword('admin123')
+              }}
+              variant="ghost"
+              className="w-full text-xs text-orange-200 hover:text-white hover:bg-orange-500/20"
+            >
+              Auto-fill Admin Credentials
+            </Button>
+            
+            <Button 
+              type="button"
+              onClick={() => {
                 setEmail('test@example.com')
                 setPassword('testpassword123')
               }}
@@ -149,11 +161,11 @@ export default function LoginPage() {
           <div className="mt-4 p-3 bg-orange-500/10 border border-orange-500/20 rounded-lg">
             <p className="text-xs text-orange-100 font-semibold mb-2">Available Test Accounts (Railway Backend):</p>
             <div className="text-xs text-orange-200 space-y-1">
+              <p><strong>Admin:</strong> admin@paymentpro.com / admin123 ✅</p>
               <p><strong>Manager:</strong> manager@example.com / manager123 ✅</p>
               <p><strong>Employee:</strong> test@example.com / testpassword123 ✅</p>
-              <p className="text-orange-300"><strong>Admin:</strong> Not available on production backend ❌</p>
             </div>
-            <p className="text-xs text-orange-300 mt-2 italic">Note: Admin account exists locally but not on Railway deployment</p>
+            <p className="text-xs text-green-300 mt-2 italic">✨ All accounts now available on production backend!</p>
           </div>
 
           <div className="mt-4 text-center">
