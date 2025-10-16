@@ -65,7 +65,7 @@ export default function LoginPage() {
                 <Input
                   id="email"
                   type="email"
-                  placeholder="Enter your email address"
+                  placeholder="manager@example.com (for testing)"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
@@ -118,6 +118,16 @@ export default function LoginPage() {
               </div>
             </Button>
           </form>
+
+          {/* Test Credentials */}
+          <div className="mt-4 p-3 bg-orange-500/10 border border-orange-500/20 rounded-lg">
+            <p className="text-xs text-orange-100 font-semibold mb-2">Test Credentials:</p>
+            <div className="text-xs text-orange-200 space-y-1">
+              <p><strong>Manager:</strong> manager@example.com / manager123</p>
+              <p><strong>Employee:</strong> user@example.com / testpassword123</p>
+              <p><strong>Admin:</strong> admin@paymentpro.com / admin123</p>
+            </div>
+          </div>
 
           <div className="mt-4 text-center">
             <p className="text-sm text-orange-100">
