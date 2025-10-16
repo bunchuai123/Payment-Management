@@ -918,6 +918,27 @@ async def update_company_settings(request: Request):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to update company settings: {str(e)}")
 
+@app.get("/api/admin/users")
+async def get_all_users(current_user: dict = Depends(get_current_user)):
+    """Get all users (HR/Admin only)"""
+    if current_user["role"] not in ["hr", "admin"]:
+        raise HTTPException(status_code=403, detail="Not authorized to view all users")
+    
+    # Return all users without passwords
+    users_list = []
+    for email, user_data in users_db.items():
+        users_list.append({
+            "id": user_data["id"],
+            "email": user_data["email"],
+            "full_name": user_data["full_name"],
+            "role": user_data["role"],
+            "created_at": "2024-01-01T00:00:00Z",  # Mock data
+            "last_login": "2024-12-16T10:30:00Z",  # Mock data
+            "status": "active"
+        })
+    
+    return {"users": users_list}
+
 @app.put("/api/admin/system")
 async def update_system_settings(request: Request):
     """Update system settings (Admin only)"""
