@@ -1,6 +1,10 @@
 # Payment Management System
 
-A comprehensive payment request and approval system built with FastAPI (Python) backend and Next.js frontend.
+# Payment Management System
+
+A comprehensive payment request management system built with Next.js and MongoDB.
+
+🚀 **Status**: Ready for production deployment with Vercel integration
 
 ## Features
 
