@@ -46,13 +46,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const login = async (credentials: LoginCredentials) => {
     try {
-      console.log('Attempting login with:', { username: credentials.username })
-      
       const formData = new FormData()
       formData.append('username', credentials.username)
       formData.append('password', credentials.password)
-
-      console.log('Sending request to:', `${api.defaults.baseURL}/api/auth/login`)
 
       const response = await api.post('/api/auth/login', formData, {
         headers: {
@@ -60,15 +56,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         },
       })
 
-      console.log('Login successful:', response.data)
-
       const { access_token, user: userData } = response.data
       
       localStorage.setItem('token', access_token)
       localStorage.setItem('user', JSON.stringify(userData))
       setUser(userData)
     } catch (error: any) {
-      console.error('Login error:', error.response?.data || error.message)
       const message = error.response?.data?.detail || error.response?.data?.message || 'Login failed'
       throw new Error(message)
     }

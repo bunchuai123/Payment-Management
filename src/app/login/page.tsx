@@ -119,14 +119,18 @@ export default function LoginPage() {
             </Button>
           </form>
 
-          {/* Test Credentials */}
-          <div className="mt-4 p-3 bg-orange-500/10 border border-orange-500/20 rounded-lg">
-            <p className="text-xs text-orange-100 font-semibold mb-2">Test Credentials:</p>
-            <div className="text-xs text-orange-200 space-y-1">
-              <p><strong>Manager:</strong> manager@example.com / manager123</p>
-              <p><strong>Employee:</strong> user@example.com / testpassword123</p>
-              <p><strong>Admin:</strong> admin@paymentpro.com / admin123</p>
-            </div>
+          <div className="mt-4">
+            <Button 
+              type="button"
+              onClick={() => {
+                setEmail('manager@example.com')
+                setPassword('manager123')
+              }}
+              variant="ghost"
+              className="w-full mt-2 text-xs text-orange-200 hover:text-white hover:bg-orange-500/20"
+            >
+              Auto-fill Manager Credentials
+            </Button>
           </div>
 
           <div className="mt-4 text-center">

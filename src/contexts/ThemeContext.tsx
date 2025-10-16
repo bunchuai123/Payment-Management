@@ -7,6 +7,7 @@ type Theme = 'light' | 'dark'
 interface ThemeContextType {
   theme: Theme
   toggleTheme: () => void
+  mounted: boolean
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined)
@@ -16,46 +17,53 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
-    setMounted(true)
-    // Check if there's a saved theme preference
-    const savedTheme = localStorage.getItem('theme') as Theme
-    if (savedTheme) {
-      setTheme(savedTheme)
-    } else {
-      // Check system preference
-      const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
-      setTheme(systemTheme)
+    // Get initial theme
+    let initialTheme: Theme = 'light'
+    
+    try {
+      const saved = localStorage.getItem('theme')
+      if (saved === 'dark' || saved === 'light') {
+        initialTheme = saved
+      } else {
+        initialTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+      }
+    } catch (e) {
+      // Fallback to light theme
+      initialTheme = 'light'
     }
+    
+    setTheme(initialTheme)
+    setMounted(true)
+    
+    // Apply initial theme immediately
+    applyThemeToDOM(initialTheme)
   }, [])
 
-  useEffect(() => {
-    // Apply theme to document
-    document.documentElement.setAttribute('data-theme', theme)
-    localStorage.setItem('theme', theme)
-    
-    // Update CSS classes for Tailwind
-    if (theme === 'dark') {
-      document.documentElement.classList.add('dark')
-    } else {
-      document.documentElement.classList.remove('dark')
+  const applyThemeToDOM = (newTheme: Theme) => {
+    try {
+      if (newTheme === 'dark') {
+        document.documentElement.classList.add('dark')
+        document.body.classList.add('dark')
+      } else {
+        document.documentElement.classList.remove('dark')
+        document.body.classList.remove('dark')
+      }
+      
+      document.documentElement.setAttribute('data-theme', newTheme)
+      localStorage.setItem('theme', newTheme)
+    } catch (e) {
+      console.error('Error applying theme:', e)
     }
-  }, [theme])
-
-  const toggleTheme = () => {
-    setTheme(prev => prev === 'light' ? 'dark' : 'light')
   }
 
-  // Prevent hydration mismatch
-  if (!mounted) {
-    return (
-      <ThemeContext.Provider value={{ theme: 'light', toggleTheme: () => {} }}>
-        {children}
-      </ThemeContext.Provider>
-    )
+  const toggleTheme = () => {
+    const newTheme = theme === 'light' ? 'dark' : 'light'
+    setTheme(newTheme)
+    applyThemeToDOM(newTheme)
   }
 
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+    <ThemeContext.Provider value={{ theme, toggleTheme, mounted }}>
       {children}
     </ThemeContext.Provider>
   )

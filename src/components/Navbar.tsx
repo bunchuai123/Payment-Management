@@ -11,7 +11,7 @@ export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [showScrollTop, setShowScrollTop] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const { theme, toggleTheme } = useTheme()
+  const { theme, toggleTheme, mounted } = useTheme()
   const { user, logout } = useAuth()
 
   useEffect(() => {
@@ -35,6 +35,10 @@ export default function Navbar() {
   const handleLogout = () => {
     logout()
     setIsMobileMenuOpen(false)
+  }
+
+  const handleThemeToggle = () => {
+    toggleTheme()
   }
 
   return (
@@ -89,24 +93,24 @@ export default function Navbar() {
               
               {/* Theme Toggle */}
               <Button
-                onClick={toggleTheme}
+                onClick={handleThemeToggle}
                 variant="ghost"
                 size="sm"
                 className="text-gray-700 dark:text-white hover:text-orange-400 hover:bg-gray-100 dark:hover:bg-white/10 p-2"
               >
-                {theme === 'light' ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5" />}
+                {mounted ? (theme === 'light' ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5" />) : <Moon className="w-5 h-5" />}
               </Button>
             </div>
 
             {/* Mobile Menu Button */}
             <div className="md:hidden flex items-center space-x-2">
               <Button
-                onClick={toggleTheme}
+                onClick={handleThemeToggle}
                 variant="ghost"
                 size="sm"
                 className="text-gray-700 dark:text-white hover:text-orange-400 hover:bg-gray-100 dark:hover:bg-white/10 p-2"
               >
-                {theme === 'light' ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
+                {mounted ? (theme === 'light' ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />) : <Moon className="w-4 h-4" />}
               </Button>
               <Button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
